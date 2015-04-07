@@ -12,8 +12,11 @@ var mainState = {
 		game.stage.backgroundColor = '#71c5cf';
 		
 		// Load the bird sprite
-		game.load.image('bird', 'assets/bird.png');
+		game.load.image('bird', 'assets/jess.png');
 		
+		//load the pipe sprite
+		game.load.image('pipe','assets/pipe.png');
+	
 	},
 	
 	create: function() {
@@ -34,6 +37,15 @@ var mainState = {
 		var spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 		spaceKey.onDown.add(this.jump, this);
 		
+		this.pipes = game.add.group(); // create a group
+		this.pipes.enableBody = true; // Add physics to the group
+		this.pipes.createMultiple(20, 'pipe'); // create 20 pipes
+		
+		this.timer = game.time.events.loop(1500, this.addRowOfPipes, this);
+		
+		this.score = 0;
+		this.labelScore = game.add.text(20, 20, "0", { font: "30px Arial", fill: "#ffffff" });
+	
 	},
 	
 	update: function() {
@@ -44,6 +56,8 @@ var mainState = {
 		//'restartGame' function
 		if (this.bird.inWorld == false)
 			this.restartGame();
+	
+		game.physics.arcade.overlap(this.bird, this.pipes, this.restartGame, null, this);
 	
 	},
 	
@@ -57,6 +71,36 @@ var mainState = {
 	restartGame: function() {
 		// start the 'main' state, which restarts the game
 		game.state.start('main');
+	},
+
+	addOnePipe: function(x,y){
+		// Get the first dead pipe of our group
+		var pipe = this.pipes.getFirstDead();
+		
+		// Set the new position of the pipe
+		pipe.reset(x,y);
+		
+		//Add velocity to the pipe to make it move left
+		pipe.body.velocity.x = -200;
+		
+		//kill the pipe when it's no longer visible
+		pipe.checkWorldBounds = true;
+		pipe.outOfBoundsKill = true;		
+		
+	
+	},
+	
+	addRowOfPipes: function() {
+		//Pick where the hole will be
+		var hole = Math.floor(Math.random() * 5) + 1;
+		
+		//Add the 6 pipes
+		for (var i = 0; i < 8; i++)
+				if (i != hole && i != hole + 1)
+					this.addOnePipe(400, i * 60 + 10);
+		
+		this.score += 1;
+		this.labelScore.text = this.score;
 	},
 
 };
