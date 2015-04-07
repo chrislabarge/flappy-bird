@@ -14,6 +14,9 @@ var mainState = {
 		// Load the bird sprite
 		game.load.image('bird', 'assets/jess.png');
 		
+		//Loading a test sprite
+		game.load.image('face', 'assets/colleen.png')
+		
 		//load the pipe sprite
 		game.load.image('pipe','assets/pipe.png');
 	
@@ -49,8 +52,14 @@ var mainState = {
 		this.pipes = game.add.group(); // create a group
 		this.pipes.enableBody = true; // Add physics to the group
 		this.pipes.createMultiple(20, 'pipe'); // create 20 pipes
+	  
+	  this.faces = game.add.group(); // create a group
+	  this.faces.enableBody = true; // Add physics to the group	
+		this.faces.createMultiple(6, 'face'); // create 2 faces
 		
 		this.timer = game.time.events.loop(1500, this.addRowOfPipes, this);
+		
+		
 		
 		this.score = 0;
 		this.labelScore = game.add.text(20, 20, "0", { font: "30px Arial", fill: "#ffffff" });
@@ -70,6 +79,7 @@ var mainState = {
 			this.restartGame();
 	
 		game.physics.arcade.overlap(this.bird, this.pipes, this.hitPipe, null, this);
+		game.physics.arcade.overlap(this.bird, this.faces, this.hitPipe, null, this);
 		
 		if (this.bird.angle < 20)
 			this.bird.angle += 1;
@@ -124,15 +134,38 @@ var mainState = {
 	
 	},
 	
+	addOneFace: function(x,y,girl){
+		// Get the first dead pipe of our group
+		var face = this.faces.getFirstDead();
+		
+		// Set the new position of the pipe
+		face.reset(x,y);
+		
+		//Add velocity to the pipe to make it move left
+		face.body.velocity.x = -200;
+		
+		//kill the pipe when it's no longer visible
+		face.checkWorldBounds = true;
+		face.outOfBoundsKill = true;		
+		
+	
+	},
+	
 	addRowOfPipes: function() {
 		//Pick where the hole will be
 		var hole = Math.floor(Math.random() * 5) + 1;
 		
 		//Add the 6 pipes
-		for (var i = 0; i < 8; i++)
-				if (i != hole && i != hole + 1)
-					this.addOnePipe(400, i * 60 + 10);
+		var myArray = ["e","c"];
+		var face = myArray[Math.floor(Math.random() * myArray.length)];
 		
+		for (var i = 0; i < 10; i++)
+				
+				if (i == hole -2 || i == hole + 2) //This works
+					this.addOneFace(400, i * 50, face );
+				else if (i != hole && i != hole +1 && i != hole -1) //Made the opening bigger
+					this.addOnePipe(400, i * 50 ); //this determines how far apart they are with gaps
+					
 		this.score += 1;
 		this.labelScore.text = this.score;
 	},
@@ -149,6 +182,9 @@ var mainState = {
 		this.pipes.forEachAlive(function(p){
 				p.body.velocity.x = 0;
 				}, this);
+		this.faces.forEachAlive(function(p){
+				p.body.velocity.x = 0;
+				}, this);		
 	
 	},
 
