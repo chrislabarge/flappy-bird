@@ -14,8 +14,15 @@ var mainState = {
 		// Load the bird sprite
 		game.load.image('bird', 'assets/jess.png');
 		
-		//Loading a test sprite
-		game.load.image('face', 'assets/colleen.png')
+		//Loading a colleen sprite
+		game.load.image('face', 'assets/colleen.png');
+		
+		//Loading a erin sprite
+		game.load.image('erin', 'assets/erin.png');
+		
+		
+		//Loading a abbie
+		game.load.image('abbie', 'assets/abbie.png');
 		
 		//load the pipe sprite
 		game.load.image('pipe','assets/pipe.png');
@@ -55,7 +62,15 @@ var mainState = {
 	  
 	  this.faces = game.add.group(); // create a group
 	  this.faces.enableBody = true; // Add physics to the group	
-		this.faces.createMultiple(6, 'face'); // create 2 faces
+		this.faces.createMultiple(6, 'face'); // create 6 faces
+		
+		this.erinFaces = game.add.group(); // create a group
+	  this.erinFaces.enableBody = true; // Add physics to the group	
+		this.erinFaces.createMultiple(6, 'erin'); // create 6 faces
+		
+		this.abbieFaces = game.add.group(); // create a group
+	  this.abbieFaces.enableBody = true; // Add physics to the group	
+		this.abbieFaces.createMultiple(6, 'abbie'); // create 6 faces
 		
 		this.timer = game.time.events.loop(1500, this.addRowOfPipes, this);
 		
@@ -80,6 +95,8 @@ var mainState = {
 	
 		game.physics.arcade.overlap(this.bird, this.pipes, this.hitPipe, null, this);
 		game.physics.arcade.overlap(this.bird, this.faces, this.hitPipe, null, this);
+		game.physics.arcade.overlap(this.bird, this.erinFaces, this.hitPipe, null, this);
+		game.physics.arcade.overlap(this.bird, this.abbieFaces, this.hitPipe, null, this);
 		
 		if (this.bird.angle < 20)
 			this.bird.angle += 1;
@@ -136,7 +153,12 @@ var mainState = {
 	
 	addOneFace: function(x,y,girl){
 		// Get the first dead pipe of our group
-		var face = this.faces.getFirstDead();
+		if( girl == 'e')
+			var face = this.erinFaces.getFirstDead();
+		else if( girl == 'a')
+			var face = this.abbieFaces.getFirstDead();
+		else
+			var face = this.faces.getFirstDead();
 		
 		// Set the new position of the pipe
 		face.reset(x,y);
@@ -156,7 +178,7 @@ var mainState = {
 		var hole = Math.floor(Math.random() * 5) + 1;
 		
 		//Add the 6 pipes
-		var myArray = ["e","c"];
+		var myArray = ["e","c","a" ];
 		var face = myArray[Math.floor(Math.random() * myArray.length)];
 		
 		for (var i = 0; i < 10; i++)
@@ -185,6 +207,13 @@ var mainState = {
 		this.faces.forEachAlive(function(p){
 				p.body.velocity.x = 0;
 				}, this);		
+		this.erinFaces.forEachAlive(function(p){
+				p.body.velocity.x = 0;
+				}, this);				
+		this.abbieFaces.forEachAlive(function(p){
+				p.body.velocity.x = 0;
+				}, this);						
+				
 	
 	},
 
