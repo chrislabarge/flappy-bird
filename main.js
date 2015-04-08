@@ -1,10 +1,9 @@
+ var innerWidth = window.innerWidth;
+ var innerHeight = window.innerHeight;
+ var gameRatio = innerWidth/innerHeight;	
 
-const SAFE_ZONE_WIDTH=400;
-const SAFE_ZONE_HEIGHT=490;
-
-
-// Initialize Phaser, and create a 400x490px game
-var game = new Phaser.Game(SAFE_ZONE_WIDTH, SAFE_ZONE_HEIGHT, Phaser.AUTO, '');
+// Initialize Phaser, and create a 400x480px game
+var game = new Phaser.Game(Math.ceil(480*gameRatio), 480, Phaser.AUTO, '');
 
 // Create our 'main' state that will contain the game
 var mainState = {
@@ -16,7 +15,10 @@ var mainState = {
 		
 		// Change the background color of the game
 		
+		  game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+			game.scale.setScreenSize(true);
 		game.stage.backgroundColor = '#71c5cf';
+		
 		
 		// Load the bird sprite
 		game.load.image('bird', 'assets/jess.png');
@@ -102,11 +104,11 @@ var mainState = {
 	
 		
 		//This is to make it full screen
-		game.stage.fullScreenScaleMode = Phaser.StageScaleMode.SHOW_ALL;
-		game.stage.scale.setShowAll();
-		game.stage.scale.pageAlignHorizontally = true;
-		game.stage.scale.pageAlignVeritcally = true;
-		game.stage.scale.refresh();
+//		game.stage.fullScreenScaleMode = Phaser.StageScaleMode.SHOW_ALL;
+	//	game.stage.scale.setShowAll();
+	//	game.stage.scale.pageAlignHorizontally = true;
+	//	game.stage.scale.pageAlignVeritcally = true;
+	//	game.stage.scale.refresh();
 	  
 	
 	},
