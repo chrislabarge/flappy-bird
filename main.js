@@ -1,5 +1,10 @@
+
+const SAFE_ZONE_WIDTH=400;
+const SAFE_ZONE_HEIGHT=490;
+
+
 // Initialize Phaser, and create a 400x490px game
-var game = new Phaser.Game(400, 490, Phaser.AUTO, 'gameDiv');
+var game = new Phaser.Game(SAFE_ZONE_WIDTH, SAFE_ZONE_HEIGHT, Phaser.AUTO, '');
 
 // Create our 'main' state that will contain the game
 var mainState = {
@@ -8,7 +13,9 @@ var mainState = {
 		//This function will be executed at the beginning
 		// That's where we load the game's assets
 	
+		
 		// Change the background color of the game
+		
 		game.stage.backgroundColor = '#71c5cf';
 		
 		// Load the bird sprite
@@ -29,13 +36,23 @@ var mainState = {
 	
 		//Sound
 		game.load.audio('jump', 'assets/jump.wav');
+		
 	},
 	
 	create: function() {
 		//This function is called after the preload function
 		//Here we set up the game, display sprites, etc.
 	
+		
+
+		
+		
+		
 		// Set the physics system
+	
+	
+	
+	
 		game.physics.startSystem(Phaser.Physics.ARCADE);
 		
 		
@@ -82,6 +99,16 @@ var mainState = {
 		
 		//this allows for the pressing of the mouse of touch screen device to jump as well
 		this.input.onDown.add(this.jump, this);
+	
+		
+		//This is to make it full screen
+		game.stage.fullScreenScaleMode = Phaser.StageScaleMode.SHOW_ALL;
+		game.stage.scale.setShowAll();
+		game.stage.scale.pageAlignHorizontally = true;
+		game.stage.scale.pageAlignVeritcally = true;
+		game.stage.scale.refresh();
+	  
+	
 	},
 	
 	update: function() {
@@ -216,6 +243,8 @@ var mainState = {
 				
 	
 	},
+
+	
 
 };
 
