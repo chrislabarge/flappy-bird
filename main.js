@@ -34,11 +34,11 @@ var mainState = {
     if (this.bitty == "jess") 
 			game.load.image('bird', 'assets/jess.png');
 		else if (this.bitty == "erin")
-			game.load.image('bird', 'assets/erin.png');
+			game.load.image('bird', 'assets/erin_bird.png');
 		else if (this.bitty == 'colleen')
 			game.load.image('bird', 'assets/colleen.png');
 		else if (this.bitty == 'abbie')
-			game.load.image('bird', 'assets/abbie.png');
+			game.load.image('bird', 'assets/abbie_bird.png');
 		else	
 			game.load.image('bird', 'assets/bird.png');
 		//Loading a colleen sprite
@@ -52,11 +52,11 @@ var mainState = {
 		//Loading a abbie
 		game.load.image('abbie', 'assets/abbie.png');
 		
+		
 		//load the pipe sprite
 		game.load.image('pipe','assets/pipe.png');
 	
-		//Sound
-		//game.load.audio('jump', 'assets/jump.wav');
+	
 		
 	},
 	
@@ -77,8 +77,7 @@ var mainState = {
 		game.physics.startSystem(Phaser.Physics.ARCADE);
 		
 		
-		//sound for jumping
-		//this.jumpSound = game.add.audio('jump');
+		
 		
 		//Display the bird on the screen
 		this.bird = this.game.add.sprite(100, 245, 'bird');
@@ -235,7 +234,9 @@ var mainState = {
 		var hole = Math.floor(Math.random() * 5) + 1;
 		
 		//Add the 6 pipes
-	//	var myArray = ["e","c","a" ];
+		
+		
+		//this selects which girls face it will use	
 		var face = this.array[Math.floor(Math.random() * this.array.length)];
 		
 		for (var i = 0; i < 10; i++)
@@ -294,6 +295,9 @@ var menuState = {
   		game.load.image('erin_menu', 'assets/erin_menu.png')
  			game.load.image('colleen_menu', 'assets/colleen_menu.png')
   		game.load.image('abbie_menu', 'assets/abbie_menu.png')
+  
+  		//Loading a title
+  		game.load.image('title', 'assets/title.png');
   },		
 
  	create: function() {
@@ -304,10 +308,14 @@ var menuState = {
  	//	this.colleen_menu = this.game.add.sprite(65,250, 'colleen_menu')
  	//	this.abbie_menu = this.game.add.sprite(65,350, 'abbie_menu' )
  		
- 		this.jessButton = this.add.button(65, 50, 'jess_menu', this.jessGame, this)
- 		this.erinButton = this.add.button(65, 150, 'erin_menu', this.erinGame, this)
- 		this.colleenButton = this.add.button(65, 250, 'colleen_menu', this.colleenGame, this)
- 		this.abbieButton = this.add.button(65, 350, 'abbie_menu', this.abbieGame, this)
+ 		this.title = this.game.add.sprite(20,20, 'title');
+ 		
+ 		this.jessButton = this.add.button(65, 100, 'jess_menu', this.jessGame, this);
+ 		this.erinButton = this.add.button(65, 200, 'erin_menu', this.erinGame, this);
+ 		this.colleenButton = this.add.button(65, 300, 'colleen_menu', this.colleenGame, this);
+ 		this.abbieButton = this.add.button(65, 400, 'abbie_menu', this.abbieGame, this);
+ 		
+ 		
  		
  	}, 
   
