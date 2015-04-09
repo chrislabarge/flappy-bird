@@ -3,10 +3,17 @@
  var gameRatio = innerWidth/innerHeight;	
 
 // Initialize Phaser, and create a 400x480px game
-var game = new Phaser.Game(Math.ceil(480*gameRatio), 480, Phaser.AUTO, '');
+ var game = new Phaser.Game(Math.ceil(590*gameRatio), 500, Phaser.CANVAS, '');
 
 // Create our 'main' state that will contain the game
 var mainState = {
+	
+	 init: function(character) {
+		this.bitty = character;
+		this.array = ["e","c","a" ];
+		
+   },
+		
 
 	preload: function() {
 		//This function will be executed at the beginning
@@ -15,20 +22,32 @@ var mainState = {
 		
 		// Change the background color of the game
 		
-		  game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-			game.scale.setScreenSize(true);
+		game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+		game.scale.setScreenSize(true);
 		game.stage.backgroundColor = '#71c5cf';
 		
 		
 		// Load the bird sprite
-		game.load.image('bird', 'assets/jess.png');
-		
+		 
+		//	game.load.image('bird', 'assets/erin.png');
+		//else
+    if (this.bitty == "jess") 
+			game.load.image('bird', 'assets/jess.png');
+		else if (this.bitty == "erin")
+			game.load.image('bird', 'assets/erin.png');
+		else if (this.bitty == 'colleen')
+			game.load.image('bird', 'assets/colleen.png');
+		else if (this.bitty == 'abbie')
+			game.load.image('bird', 'assets/abbie.png');
+		else	
+			game.load.image('bird', 'assets/bird.png');
 		//Loading a colleen sprite
-		game.load.image('face', 'assets/colleen.png');
+		game.load.image('colleen', 'assets/colleen.png');
 		
 		//Loading a erin sprite
 		game.load.image('erin', 'assets/erin.png');
 		
+		game.load.image('jess', 'assets/jess_head.png');
 		
 		//Loading a abbie
 		game.load.image('abbie', 'assets/abbie.png');
@@ -37,7 +56,7 @@ var mainState = {
 		game.load.image('pipe','assets/pipe.png');
 	
 		//Sound
-		game.load.audio('jump', 'assets/jump.wav');
+		//game.load.audio('jump', 'assets/jump.wav');
 		
 	},
 	
@@ -59,7 +78,7 @@ var mainState = {
 		
 		
 		//sound for jumping
-		this.jumpSound = game.add.audio('jump');
+		//this.jumpSound = game.add.audio('jump');
 		
 		//Display the bird on the screen
 		this.bird = this.game.add.sprite(100, 245, 'bird');
@@ -79,17 +98,26 @@ var mainState = {
 		this.pipes.enableBody = true; // Add physics to the group
 		this.pipes.createMultiple(20, 'pipe'); // create 20 pipes
 	  
-	  this.faces = game.add.group(); // create a group
-	  this.faces.enableBody = true; // Add physics to the group	
-		this.faces.createMultiple(6, 'face'); // create 6 faces
+	  this.colleenFaces = game.add.group(); // create a group
+	  this.colleenFaces.enableBody = true; // Add physics to the group	
+		if (this.bitty == 'colleen')
+			this.colleenFaces.createMultiple(6, 'jess');
+		else
+			this.colleenFaces.createMultiple(6, 'colleen'); 	
 		
-		this.erinFaces = game.add.group(); // create a group
-	  this.erinFaces.enableBody = true; // Add physics to the group	
-		this.erinFaces.createMultiple(6, 'erin'); // create 6 faces
-		
-		this.abbieFaces = game.add.group(); // create a group
-	  this.abbieFaces.enableBody = true; // Add physics to the group	
-		this.abbieFaces.createMultiple(6, 'abbie'); // create 6 faces
+		this.erinFaces = game.add.group(); 
+	  this.erinFaces.enableBody = true;
+		if (this.bitty == 'erin')
+			this.erinFaces.createMultiple(6, 'jess'); 
+		else
+			this.erinFaces.createMultiple(6, 'erin'); 	
+	
+		this.abbieFaces = game.add.group(); 
+	  this.abbieFaces.enableBody = true; 
+		if (this.bitty == 'abbie')
+			this.abbieFaces.createMultiple(6, 'jess'); 
+		else
+			this.abbieFaces.createMultiple(6, 'abbie');		
 		
 		this.timer = game.time.events.loop(1500, this.addRowOfPipes, this);
 		
@@ -123,7 +151,7 @@ var mainState = {
 			this.restartGame();
 	
 		game.physics.arcade.overlap(this.bird, this.pipes, this.hitPipe, null, this);
-		game.physics.arcade.overlap(this.bird, this.faces, this.hitPipe, null, this);
+		game.physics.arcade.overlap(this.bird, this.colleenFaces, this.hitPipe, null, this);
 		game.physics.arcade.overlap(this.bird, this.erinFaces, this.hitPipe, null, this);
 		game.physics.arcade.overlap(this.bird, this.abbieFaces, this.hitPipe, null, this);
 		
@@ -140,7 +168,7 @@ var mainState = {
 			return;
 		
 		//make the sound on jump
-		this.jumpSound.play();
+	//	this.jumpSound.play();
 		
 		// Add a vertical velocity to the bird
 		this.bird.body.velocity.y = -350;
@@ -160,7 +188,7 @@ var mainState = {
 	// Restart the game
 	restartGame: function() {
 		// start the 'main' state, which restarts the game
-		game.state.start('main');
+		game.state.start('main', true, false, this.bitty);
 	},
 
 	addOnePipe: function(x,y){
@@ -187,7 +215,7 @@ var mainState = {
 		else if( girl == 'a')
 			var face = this.abbieFaces.getFirstDead();
 		else
-			var face = this.faces.getFirstDead();
+			var face = this.colleenFaces.getFirstDead();
 		
 		// Set the new position of the pipe
 		face.reset(x,y);
@@ -207,8 +235,8 @@ var mainState = {
 		var hole = Math.floor(Math.random() * 5) + 1;
 		
 		//Add the 6 pipes
-		var myArray = ["e","c","a" ];
-		var face = myArray[Math.floor(Math.random() * myArray.length)];
+	//	var myArray = ["e","c","a" ];
+		var face = this.array[Math.floor(Math.random() * this.array.length)];
 		
 		for (var i = 0; i < 10; i++)
 				
@@ -233,7 +261,7 @@ var mainState = {
 		this.pipes.forEachAlive(function(p){
 				p.body.velocity.x = 0;
 				}, this);
-		this.faces.forEachAlive(function(p){
+		this.colleenFaces.forEachAlive(function(p){
 				p.body.velocity.x = 0;
 				}, this);		
 		this.erinFaces.forEachAlive(function(p){
@@ -246,11 +274,66 @@ var mainState = {
 	
 	},
 
-	
 
 };
+
+var menuState = {
+
+	preload: function() {
+		//This function will be executed at the beginning
+		// That's where we load the game's assets
+	
+		
+		// Change the background color of the game
+		
+		  game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+			game.scale.setScreenSize(true);
+	  	game.stage.backgroundColor = '#FF66FF';
+		
+			game.load.image('jess_menu','assets/jess_menu.png');
+  		game.load.image('erin_menu', 'assets/erin_menu.png')
+ 			game.load.image('colleen_menu', 'assets/colleen_menu.png')
+  		game.load.image('abbie_menu', 'assets/abbie_menu.png')
+  },		
+
+ 	create: function() {
+ //		this.input.onDown.add(this.startGame(""), this);
+ 	
+ 	//	this.jess_menu = this.game.add.sprite(65,50, 'jess_menu');
+ 	//	this.erin_menu = this.game.add.sprite(65,150,'erin_menu')
+ 	//	this.colleen_menu = this.game.add.sprite(65,250, 'colleen_menu')
+ 	//	this.abbie_menu = this.game.add.sprite(65,350, 'abbie_menu' )
+ 		
+ 		this.jessButton = this.add.button(65, 50, 'jess_menu', this.jessGame, this)
+ 		this.erinButton = this.add.button(65, 150, 'erin_menu', this.erinGame, this)
+ 		this.colleenButton = this.add.button(65, 250, 'colleen_menu', this.colleenGame, this)
+ 		this.abbieButton = this.add.button(65, 350, 'abbie_menu', this.abbieGame, this)
+ 		
+ 	}, 
+  
+  jessGame: function() {
+		// start the 'main' state, which restarts the game
+		game.state.start('main', true, false, "jess");
+	},
+	erinGame: function() {
+		// start the 'main' state, which restarts the game
+		game.state.start('main', true, false, "erin");
+	},
+	colleenGame: function() {
+		// start the 'main' state, which restarts the game
+		game.state.start('main', true, false, "colleen");
+	},
+	abbieGame: function() {
+		// start the 'main' state, which restarts the game
+		game.state.start('main', true, false, "abbie");
+	},
+
+};
+
 
 // Add and start the 'main' state to start the game
 
 game.state.add('main', mainState);
-game.state.start('main');
+game.state.add('menu', menuState);
+
+game.state.start('menu');
